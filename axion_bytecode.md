@@ -121,5 +121,5 @@ Constant_Array {
     u2 tag;
     u2 type; // Constant_TypeRef index
     u2 length;
-    u2 indexes[length]; // references constants in the index pool. This places a fundamental limit on the sizes of arrays
+    u2 indexes[length]; // references constants in the index pool. This places a fundamental limit on the sizes of constant arrays
 };

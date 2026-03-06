@@ -1,6 +1,6 @@
 ## Syntax
 
-1. This is like Java in basic syntax except for semicolons. There are none. All statements must be on separate lines, unless separated by semicolons. Curly braces are used, declarations are `returntype name(type param) {}` or `type name = value`
+1. This is like Java in basic syntax except for semicolons. There are none. All statements must be on separate lines. Curly braces are used, declarations are `returntype name(type param) {}` or `type name = value`
 2. Keywords are not shortened to impl or func (func doesn't even exist, as we use returntype in it's place to indicate a function) and print is not a keyword. Keywords are carefully chosen before creation so as to prevent awkward problems, such as a function called assert being replaced by a keyword.
 3. Very little punctuation mashing, but not bordering on a full NLP needed for a parser. Puncuation is used when it makes sense, like periods, unary operators, binary operators, things like that. Examples may include nullability operators, exponentiation, simple arithmetic or bitwise logic
 4. The standard library doesn't get special syntax treatment. One must be able to rebuild it from scratch (so no Object superclasses everything) using just the source files. VERY FEW EXCEPTIONS.
