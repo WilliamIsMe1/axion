@@ -1,0 +1,125 @@
+Full and total specification of the Axion Programming Language
+
+This is what an axion bytecode file looks like.
+
+```
+axion_file {
+    header metadata;
+    u2 cp_count;
+    cp_info constant_pool[cp_count]; // Constant Pool info
+    u1 mod_count;
+    mod_info modules[mod_count]; // Imported modules info
+    u2 t_count;
+    t_info type_pool[t_count]; // Classes, interfaces, structs, enums, annotation declarations,
+    u2 f_count;
+    f_info function_pool[f_count]; // Global functions
+    u2 g_count;
+    g_info global_pool[g_count]; // Global variables and constants
+    u2 attrib_count;
+    attribute_info attributes[attrib_count]; // Special attributes pertaining to the file
+};
+
+header {
+    u4 magic; // 0xBA5EBA11
+    u2 major;
+    u2 minor;
+};
+
+cp_info {
+    u2 tag;
+    u1 data[];
+};
+
+mod_info {
+    u2 name_index; // index in constant pool
+    u2 path_index; // index for module relative to project root
+};
+
+t_info { // This can be a class, interface, struct, enum, record, annotation declaration, mixin, etc.,
+    u2 tag;
+    u2 name_index;
+	u2 type_index; // clarifies if this is a class, interface, struct, enum, record, annotation, or mixin
+	u2 superclass_name_index; // References either null for no parent, or a matching type farther up the tree
+	u2 interface_count; // All interface extensions
+	u2 interface_indices[interface_count] // Where are the interfaces in the constant pool?
+	
+};
+
+f_info {
+    u2 name_index;
+    u2 signature_index;
+    u2 ann_count;
+    a_info annotations[ann_count];
+    u2 attrib_count;
+    attribute_info attributes[attrib_count];
+};
+
+a_info {
+    u2 name_index; // Reference to annotation's name.
+    u2 field_count;
+    u2 field_indices[field_count]; // These link to constants in constant pool. Only primitives can be used in annotations.
+};
+
+g_info {
+    u2 tag;
+    u1[] data;
+};
+```
+
+We shall explore each part in depth. First let's explore the constant pool, which holds all the constants needed for the program. The tag attribute uses this table to determine what type of constant an entry contains.
+| Value  | Constant Type            |
+|--------|--------------------------|
+| 0x0000 | Constant_NULL            |
+| 0x0001 | Constant_INT             |
+| 0x0002 | Constant_FLOAT           |
+| 0x0003 | Constant_LONG            |
+| 0x0004 | Constant_DOUBLE          |
+| 0x0005 | Constant_Utf8            |
+| 0x0006 | Constant_String          |
+| 0x0007 | Constant_Array           |
+
+
+Let's take a look at each tag.
+
+Constant_NULL {
+    u2 tag;
+}; // That's all. NULL just references nothing. The first entry of the constant pool is always null.
+
+Constant_INT {
+    u2 tag;
+    u4 data;
+};
+
+Constant_FLOAT {
+    u2 tag;
+    u4 data;
+};
+
+Constant_LONG {
+    u2 tag;
+    u8 data;
+};
+
+Constant_DOUBLE {
+    u2 tag;
+    u8 data;
+};
+
+Constant_Utf8 { // This is the limit of any String literal. Actual strings extend as far as the computer may allow a char array to go.
+    u2 tag;
+    u2 length;
+    u1 data[length];
+};
+
+Constant_String {
+    u2 tag;
+    u2 encoding_ref;
+    u2 data_ref;
+};
+
+Constant_Array {
+    u2 tag;
+    u2 type; // Constant_TypeRef index
+    u2 length;
+    u2 indexes[length]; // references constants in the index pool. This places a fundamental limit on the sizes of arrays
+};
